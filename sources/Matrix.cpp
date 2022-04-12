@@ -325,7 +325,12 @@ namespace zich {
         }
         return Matrix(arr, m.row(), m.cols());
     }
-
+    /***
+     * Matrix Multiplication
+     * @param m1 - left matrix for multiplying
+     * @param m2 - right matrix for multiplying
+     * @return The matrix which is the product of the multiplication
+     */
     Matrix operator*(const Matrix &m1, const Matrix &m2) {
         if (m1.cols() != m2.row()) {
             throw invalid_argument("Sized not eligible for matrix multiplication");
@@ -340,7 +345,15 @@ namespace zich {
         }
         return Matrix(arr, m1.row(), m2.cols());
     }
-
+    /***
+     * Matrix Multiplication for this matrix
+    * @param m2 - right matrix for multiplying
+    * @return The matrix which is the product of the multiplication
+    */
+    Matrix &Matrix:: operator*=(const Matrix &m2) {
+        *this = *this*m2;
+        return *this;
+    }
     /**
      * My "Printing" matrix override
      * @param output ostream we work on
@@ -366,6 +379,14 @@ namespace zich {
 
     //need to implement this
     std::istream &operator>>(istream &input, Matrix &m) {
+        vector<double> arr;
+        string read_input ;
+        char c = input.get();
+        while(c!='\n'){
+            read_input+=c;
+
+        }
+        m =  Matrix(arr,1,2);
         return input;
     }
 

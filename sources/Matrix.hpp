@@ -36,6 +36,7 @@ namespace zich{
         //binary multiplication operators
         Matrix operator*(double scalar) const;
         Matrix& operator*=(double scalar);
+        Matrix& operator*=(const Matrix & m2);
 
         //comparison operators
         bool operator==(Matrix& other);
