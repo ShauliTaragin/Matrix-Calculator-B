@@ -377,15 +377,31 @@ namespace zich {
     }
 
 
-    //need to implement this
+    //"[1 1 1 1], [1 1 1 1], [1 1 1 1]\n"
     std::istream &operator>>(istream &input, Matrix &m) {
         vector<double> arr;
         string read_input ;
+        int col_counter;
+        int row_counter;
         char c = input.get();
         while(c!='\n'){
-            read_input+=c;
+            throw invalid_argument("Bad input");
+            if(c==' '){
+                arr.push_back(stod(read_input));
+                read_input = "";
+                col_counter++;
+            }
+            else if(c==']'){
+                arr.push_back(stod(read_input));
+                c= input.get()
 
+                read_input = "";
+            }
+            read_input+=c;
+            c= input.get();
         }
+
+
         m =  Matrix(arr,1,2);
         return input;
     }
