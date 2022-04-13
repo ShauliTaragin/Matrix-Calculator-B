@@ -32,8 +32,3 @@
 *.app
 demo
 test
-/StudentTest3.cpp
-/StudentTest2.cpp
-
-.idea
-/StudentTest1.cpp
