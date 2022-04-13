@@ -363,8 +363,11 @@ namespace zich {
                 }
                 if (j != m.cols() - 1) {
                     output << m.matrix[i][j] << ' ';
-                } else {
+                } else if(i!=m.row()-1){
                     output << m.matrix[i][j] << "]\n";
+                }
+                else{
+                    output << m.matrix[i][j]<< "]";
                 }
             }
         }
@@ -374,14 +377,14 @@ namespace zich {
 
     //"[1 1 1 1], [1 1 1 1], [1 1 1 1]\n"
     std::istream &operator>>(istream &input, Matrix &m) {
+        bool flag = false;
         vector<double> arr;
         string read_number;
         string read_input;
-        int first_row_counter=1;
+        int first_row_counter_len=1;
         int col_counter = 1;
-        int row_counter =0;
+        int row_counter =1;
         char c = input.get();
-        int flag = 0;
         while(c!='\n'){
             if(c==' '){
                 arr.push_back(stod(read_number));
@@ -391,10 +394,10 @@ namespace zich {
             else if(c==','){
                 row_counter++;
                 if(!flag) {
-                    first_row_counter = col_counter;
-                    flag= 1;
+                    flag= true;
+                    first_row_counter_len = col_counter;
                 }
-                else if(col_counter!=first_row_counter && flag){
+                else if(col_counter!=first_row_counter_len && flag){
                     throw invalid_argument("Bad input");
                 }
                 col_counter=0;
@@ -407,18 +410,19 @@ namespace zich {
             read_input+=c;
             c= input.get();
         }
+        arr.push_back(stod(read_number));
         //iterate over what we read and make sure to throw error when needed
         for (size_t i = 0; i <read_input.size() ; ++i) {
             if (i==0 && read_input[i]!='['){
                 throw invalid_argument("Bad input");
             }
-            if(i!=0 &&read_input.at(i)!='['){
-                if(read_input.at(i-1)!=' ' &&read_input.at(i-2)!=','){
+            if(i!=0 &&read_input.at(i)=='['){
+                if(read_input.at(i-1)!=' ' || read_input.at(i-2)!=','){
                     throw invalid_argument("Bad input");
                 }
             }
         }
-        m =  Matrix(arr, row_counter, first_row_counter);
+        m =  Matrix(arr, row_counter, first_row_counter_len);
         return input;
     }
 
