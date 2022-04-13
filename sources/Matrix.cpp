@@ -149,20 +149,19 @@ namespace zich {
      * @param other matrix for which we test if our matrix equals it
      * @return true if they are identical false otherwise
      */
-    bool Matrix::operator==( Matrix &other) {
-        if (other.row() != this->row() || other.cols() != this->cols()) {
+    bool operator==(const Matrix &matrix1, const Matrix &matrix2) {
+        if (matrix2.row() != matrix1.row() || matrix2.cols() != matrix1.cols()) {
             throw invalid_argument("Both matrices need to be the same size");
         }
-        for (size_t i = 0; i < row(); ++i) {
-            for (size_t j = 0; j < cols(); ++j) {
-                if (this->matrix[i][j] != other.matrix[i][j]) {
+        for (size_t i = 0; i < matrix1.row(); ++i) {
+            for (size_t j = 0; j < matrix1.cols(); ++j) {
+                if (matrix1.matrix[i][j] != matrix2.matrix[i][j]) {
                     return false;
                 }
             }
         }
         return true;
     }
-
     /**
     * Simply checking if one single entry in other matrix is different then ours
     * @param other matrix for which we test if our matrix doesn't equal it
@@ -279,12 +278,10 @@ namespace zich {
     * Subtracting 1 to each entry in this matrix postfix.
     * @return this matrix with each entry decremented by 1
     */
-    void Matrix::operator++(int we_are_postfixing) {
-        for (size_t i = 0; i < row(); ++i) {
-            for (size_t j = 0; j < cols(); ++j) {
-                this->matrix[i][j]++;
-            }
-        }
+    Matrix Matrix::operator++(int we_are_postfixing) {
+        Matrix a {*this};
+        ++*this;
+        return a;
     }
 
     /**
@@ -304,12 +301,10 @@ namespace zich {
     * Subtracting 1 to each entry in this matrix postfix.
     * @return this matrix with each entry decremented by 1
     */
-    void Matrix::operator--(int we_are_postfixing) {
-        for (size_t i = 0; i < row(); ++i) {
-            for (size_t j = 0; j < cols(); ++j) {
-                this->matrix[i][j]--;
-            }
-        }
+    Matrix  Matrix::operator--(int we_are_postfixing) {
+        Matrix a {*this};
+        --*this;
+        return a;
     }
 
     /**
@@ -380,31 +375,54 @@ namespace zich {
     //"[1 1 1 1], [1 1 1 1], [1 1 1 1]\n"
     std::istream &operator>>(istream &input, Matrix &m) {
         vector<double> arr;
-        string read_input ;
-        int col_counter;
-        int row_counter;
+        string read_number;
+        string read_input;
+        int first_row_counter=1;
+        int col_counter = 1;
+        int row_counter =0;
         char c = input.get();
+        int flag = 0;
         while(c!='\n'){
-            throw invalid_argument("Bad input");
             if(c==' '){
-                arr.push_back(stod(read_input));
-                read_input = "";
+                arr.push_back(stod(read_number));
+                read_number = "";
                 col_counter++;
             }
-            else if(c==']'){
-                arr.push_back(stod(read_input));
-                c= input.get()
-
-                read_input = "";
+            else if(c==','){
+                row_counter++;
+                if(!flag) {
+                    first_row_counter = col_counter;
+                    flag= 1;
+                }
+                else if(col_counter!=first_row_counter && flag){
+                    throw invalid_argument("Bad input");
+                }
+                col_counter=0;
+            }
+            if(c!=']'){
+                if(c!='[') {
+                    read_number +=c;
+                }
             }
             read_input+=c;
             c= input.get();
         }
-
-
-        m =  Matrix(arr,1,2);
+        //iterate over what we read and make sure to throw error when needed
+        for (size_t i = 0; i <read_input.size() ; ++i) {
+            if (i==0 && read_input[i]!='['){
+                throw invalid_argument("Bad input");
+            }
+            if(i!=0 &&read_input.at(i)!='['){
+                if(read_input.at(i-1)!=' ' &&read_input.at(i-2)!=','){
+                    throw invalid_argument("Bad input");
+                }
+            }
+        }
+        m =  Matrix(arr, row_counter, first_row_counter);
         return input;
     }
+
+
 
 
 }
