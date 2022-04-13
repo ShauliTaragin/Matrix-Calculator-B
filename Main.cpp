@@ -9,10 +9,11 @@ using namespace zich;
 
 int main(){
     //creating a simple procedure where the user can decide what size and what Matrix would he like.
-    int flag=1;
     bool first= true;
     Matrix mat1{{1, 2, 3, 4}, 2, 2};
-    while(flag) {//when the user decides we exit the loop
+    Matrix mat2{{1, 2, 3, 4}, 2, 2};
+    int const five = 5;
+    while(true) {//when the user decides we exit the loop
         if(first) {
             cout << "To begin please enter your matrix in the following order, for example "
                     "for the identity matrix of size 3 - \n [1 0 0], [0 1 0], [0 0 1]"
@@ -25,28 +26,29 @@ int main(){
                 break;
             }
             first = false;
+            cout << "Enter a Matrix in the same format as before for operations on your matrix.\n"
+                    "Note: make sure its the correct dimensions." << endl;
+            cin >> mat2;
         }
         cout<< "this is your matrix!\n" << mat1 << "\n Let's show some matrix operations of you're choice." <<endl;
         cout << "For Unary operations enter 1" << endl;
         cout << "For Binary operations and comparisons enter 2" << endl;
         cout << "To exit the program at any time enter 0" << endl;
-        int option;
+        int option=1;
         cin >> option;
         if (option == 0) {
-            flag = 0;
             break;
         }
         if (option == 1) {
-            int unary_option;
+            int unary_option=1;
             cout << "For incrementing all entries by 1 enter 1" << endl;
             cout << "For decrementing all entries by 1 enter 2" << endl;
             cout << "For Showing the negative of your matrix enter 3" << endl;
             cin>>unary_option;
             if(unary_option ==0 ){
-                flag = 0;
                 break;
             }
-            else if(unary_option ==1){
+            if(unary_option ==1){
                  mat1++;
                  cout<< "this is your matrix!\n" << mat1<< endl;
             }
@@ -59,29 +61,24 @@ int main(){
             }
         }
         else{//option ==2
-            int binary_option;
+            int binary_option=1;
             cout << "For Scalar multiplication enter 1" << endl;
             cout << "For comparisons enter 2" << endl;
             cout << "For binary operations which will change your matrix enter 3" << endl;
             cout << "For binary operations which will not change your matrix enter 4" << endl;
             cin>>binary_option;
             if(binary_option ==0 ){
-                flag = 0;
                 break;
             }
-            else if(binary_option ==1){
-                int scalar;
+            if(binary_option ==1){
+                int scalar=1;
                 cout << "Enter a Scalar to multiply by" << endl;
                 cin >> scalar;
                 mat1*=scalar;
                 cout<< "this is your matrix!\n" << mat1<< endl;
             }
             else if(binary_option ==2 ){
-                Matrix mat2{{1, 2, 3, 4}, 2, 2};
-                cout << "Enter a Matrix in the same format as before to compare to your matrix.\n"
-                        "Note: make sure its the same dimensions as your matrix." << endl;
-                cin >> mat2;
-                int comp_option;
+                int comp_option=1;
                 cout << "What would you like to test?" << endl;
                 cout << "For : Your matrix>another matrix. enter 1" << endl;
                 cout << "For : Your matrix>=another matrix. enter 2" << endl;
@@ -104,10 +101,10 @@ int main(){
                         case 4:
                             cout << (mat1<=mat2) << endl;
                             break;
-                        case 5:
+                        case five:
                             cout << (mat1==mat2) << endl;
                             break;
-                        case 6:
+                        case (five+1):
                             cout << (mat1!=mat2) << endl;
                             break;
                     }
@@ -117,26 +114,22 @@ int main(){
                 }
             }
             else if(binary_option ==3 ){
-                Matrix mat2{{1, 2, 3, 4}, 2, 2};
-                cout << "Enter a Matrix in the same format as before.\n"
-                        "Note: make sure its the correct dimensions." << endl;
-                cin >> mat2;
-                int operation_option;
+                int operation_option=1;
                 cout << "How would you like to change your matrix?" << endl;
                 cout << "For : Your matrix*another matrix. enter 1" << endl;
-                cout << "For : Your matrix-another matrix. enter 2" << endl;
-                cout << "For : Your matrix+another matrix. enter 3" << endl;
+                cout << "For : Your matrix+another matrix. enter 2" << endl;
+                cout << "For : Your matrix-another matrix. enter 3" << endl;
                 cin>>operation_option;
                 try {
                     switch (operation_option) {
                         case 1:
-                            cout << (mat1>mat2) << endl;
+                            mat1*=mat2;
                             break;
                         case 2:
-                            cout << (mat1>=mat2) << endl;
+                            mat1+=mat2;
                             break;
                         case 3:
-                            cout << (mat1<mat2) << endl;
+                            mat1-=mat2;
                             break;
                     }
                 }
@@ -145,11 +138,35 @@ int main(){
                 }
                 cout<< "this is your matrix!\n" << mat1<< endl;
             }
+            else{//binary option 4
+                int operation_option=1;
+                cout << "What would you like to calculate?" << endl;
+                cout << "For : Your matrix*another matrix. enter 1" << endl;
+                cout << "For : Your matrix+another matrix. enter 2" << endl;
+                cout << "For : Your matrix-another matrix. enter 3" << endl;
+                cin>>operation_option;
+                try {
+                    switch (operation_option) {
+                        case 1:
+                            cout<< (mat1*mat2)<< endl;
+                            break;
+                        case 2:
+                            cout<< (mat1+mat2)<< endl;
+                            break;
+                        case 3:
+                            cout<< (mat1-mat2)<< endl;
+                            break;
+                    }
+                }
+                catch (exception &ex) {
+                    cout << "Wrong sizes , caught exception: " << ex.what() << endl;
+                }
+            }
         }
-
         cout << "\nIf you wish to do more operations on your matrix enter 1, if you wish to exit enter 0" << endl;
-        cin>>flag;
-        if (!flag){//if he is done we break the loop and exit the program.
+        int dummy=1;
+        cin>>dummy;
+        if (dummy==0){//if he is done we break the loop and exit the program.
             break;
         }
     }
